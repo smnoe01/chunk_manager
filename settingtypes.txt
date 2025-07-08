@@ -1,0 +1,77 @@
+# Maximum number of emerges per globalstep -- Controls the maximum number of chunk emerges per globalstep
+max_emerges_per_step (Max emerges per step) int 3
+
+# Cache timeout in seconds -- How long (in seconds) a cached chunk remains valid
+cache_timeout (Cache timeout) int 30
+
+# Cleanup interval in globalsteps -- Interval (in globalsteps) for cache cleanup
+cleanup_interval (Cleanup interval) int 100
+
+# Prediction distance in nodes -- Distance (in nodes) used to predict chunk loading
+prediction_distance (Prediction distance) int 75
+
+# Minimum velocity threshold in nodes/s -- Minimum player velocity (in nodes/s) to trigger prediction
+min_velocity_threshold (Min velocity threshold) int 0.5
+
+# Maximum number of cached chunks -- Max number of chunks to keep in cache
+max_cache_size (Max cache size) int 1000
+
+# Chunk unload timeout in seconds -- Time (in seconds) before a chunk is automatically unloaded
+chunk_unload_timeout (Chunk unload timeout) int 60
+
+# Unload check interval in seconds -- Frequency (in seconds) of unload checks
+unload_check_interval (Unload check interval) int 30
+
+# Emerge timeout in seconds -- Maximum time (in seconds) allowed for a chunk emerge
+emerge_timeout (Emerge timeout) int 10.0
+
+# Number of emerge timeouts before suspension -- Number of timeouts before suspending emerges
+emerge_timeout_threshold (Emerge timeout threshold) int 3
+
+# View range when player count is low -- View range in nodes for low player count
+view_range_low_range (Low players view range) int 3
+
+# Player count threshold for low view range -- Max number of players for low view range
+view_range_low_max (Low players max count) int 10
+
+# View range when player count is medium -- View range in nodes for medium player count
+view_range_medium_range (Medium players view range) int 5
+
+# Player count threshold for medium view range -- Max number of players for medium view range
+view_range_medium_max (Medium players max count) int 5
+
+# View range when player count is high -- View range in nodes for high player count
+view_range_high_range (High players view range) int 8
+
+# Player count threshold for high view range -- Max number of players for high view range
+view_range_high_max (High players max count) int 0
+
+# Velocity threshold to enter emergency mode in nodes/s -- Player speed threshold triggering emergency mode
+extreme_velocity_threshold (Emergency velocity threshold) int 2.0
+
+# Cache size during emergency mode -- Cache size limit when in emergency mode
+emergency_cache_size (Emergency cache size) int 500
+
+# Maximum emerges per step during emergency mode -- Max chunk emerges per globalstep in emergency mode
+emergency_emerges_per_step (Emergency emerges per step) int 1
+
+# Throttle prediction during emergency mode -- Whether to throttle prediction when in emergency mode
+throttle_prediction (Throttle prediction) bool true
+
+# Queue size threshold for high load -- Queue length triggering high-load handling
+queue_size_threshold (Queue size threshold) int 25
+
+# Emerge time threshold for high load in seconds -- Per-chunk emerge time triggering high-load handling
+emerge_time_threshold (Emerge time threshold) int 5.0
+
+# Cache miss ratio threshold for high load -- Cache miss ratio triggering high-load handling
+cache_miss_ratio (Cache miss ratio) int 0.7
+
+# Maximum processing time per step in seconds -- Max allowed processing time per globalstep
+max_processing_time (Max processing time) int 0.05
+
+# Consecutive overloads before emergency mode -- Number of back-to-back overloads before activating emergency mode
+consecutive_overload_threshold (Consecutive overload threshold) int 3
+
+# Emergence timeout threshold in seconds for emergency mode -- Timeouts before emergency suspension in emergency mode
+emergence_timeout_threshold (Emergence timeout threshold) int 8.0
