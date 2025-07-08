@@ -71,9 +71,4 @@ Developed by [Atlante](https://github.com/smnoe01)
 
 ## Discord
 
-<<<<<<< HEAD
-[Discord Server](https://discord.gg/8ZJ6DD7VCf)
-=======
 [Discord Server](https://discord.gg/5FbgjvQA2P)
-
->>>>>>> 37f498edac44d650c16aac716b577c6fef0139c0
