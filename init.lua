@@ -1,6 +1,6 @@
 local modname = core.get_current_modname()
 
-local version = "2.0.0"
+local version = "2.0.1"
 local src_path = core.get_modpath(modname) .. "/src"
 
 dofile(src_path .. "/api.lua")

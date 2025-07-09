@@ -5,6 +5,9 @@
                             [Disable]
 --]]
 
+local modname = core.get_current_modname()
+local S = core.get_translator(modname)
+
 local config_keys = {
     "view_distance", "emergency_view_distance", "max_cache_size", "emergency_cache_size",
     "prediction_interval", "emergency_prediction_interval", "timeout_threshold",
