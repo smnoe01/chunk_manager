@@ -42,8 +42,7 @@ Chunk Manager is a server-side Luanti mod that intelligently manages the loading
 
 ## Configuration
 
-All core settings live in the `CONFIG` table inside `api.lua`. You can tweak:
-You can also configure it by going to minetest settings.
+You can also configure mod settings it by going to minetest settings.
 
 - Cache size limits and timeouts  
 - Unload intervals and emerge parameters  
