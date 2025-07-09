@@ -47,7 +47,7 @@ You can also configure mod settings it by going to minetest settings.
 - Cache size limits and timeouts  
 - Unload intervals and emerge parameters  
 - Player view range thresholds  
-- Overload detection criteria  
+- Overload detection critical 
 - Emergency‑mode behavior
 
 Adjust these values to fit your server’s scale and performance profile.
