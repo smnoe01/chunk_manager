@@ -1,77 +1,68 @@
-# Maximum number of emerges per globalstep -- Controls the maximum number of chunk emerges per globalstep
-max_emerges_per_step (Max emerges per step) int 3
+# Distance in chunks to load around the player.
+view_distance (View distance) float 5.0
 
-# Cache timeout in seconds -- How long (in seconds) a cached chunk remains valid
-cache_timeout (Cache timeout) int 30
+# Distance in chunks when emergency mode is active.
+emergency_view_distance (Emergency view distance) float 3.0
 
-# Cleanup interval in globalsteps -- Interval (in globalsteps) for cache cleanup
-cleanup_interval (Cleanup interval) int 100
+# Maximum cache size in megabytes.
+max_cache_size (Maximum cache size) float 1000.0
 
-# Prediction distance in nodes -- Distance (in nodes) used to predict chunk loading
-prediction_distance (Prediction distance) int 75
+# Maximum cache size in megabytes in emergency mode.
+emergency_cache_size (Emergency cache size) float 500.0
 
-# Minimum velocity threshold in nodes/s -- Minimum player velocity (in nodes/s) to trigger prediction
-min_velocity_threshold (Min velocity threshold) int 0.5
+# Prediction interval in seconds.
+prediction_interval (Prediction interval) float 1.0
 
-# Maximum number of cached chunks -- Max number of chunks to keep in cache
-max_cache_size (Max cache size) int 1000
+# Prediction interval in seconds in emergency mode.
+emergency_prediction_interval (Emergency prediction interval) float 1.0
 
-# Chunk unload timeout in seconds -- Time (in seconds) before a chunk is automatically unloaded
-chunk_unload_timeout (Chunk unload timeout) int 60
+# Maximum wait time for an emergence in seconds.
+timeout_threshold (Timeout threshold) float 5.0
 
-# Unload check interval in seconds -- Frequency (in seconds) of unload checks
-unload_check_interval (Unload check interval) int 30
+# Maximum queue size before triggering emergency mode.
+queue_size_threshold (Queue size threshold) int 50
 
-# Emerge timeout in seconds -- Maximum time (in seconds) allowed for a chunk emerge
-emerge_timeout (Emerge timeout) int 10.0
+# Cache miss rate threshold before triggering emergency mode.
+cache_miss_threshold (Cache miss threshold) float 0.7
 
-# Number of emerge timeouts before suspension -- Number of timeouts before suspending emerges
-emerge_timeout_threshold (Emerge timeout threshold) int 3
+# Maximum emergence time in seconds before emergency mode.
+emergence_time_threshold (Emergence time threshold) float 1.0
 
-# View range when player count is low -- View range in nodes for low player count
-view_range_low_range (Low players view range) int 3
+# Thermal decay factor per interval.
+thermal_decay (Thermal decay) float 0.95
 
-# Player count threshold for low view range -- Max number of players for low view range
-view_range_low_max (Low players max count) int 10
+# Minimum chunk data size in bytes for compression.
+compression_threshold (Compression threshold) int 100
 
-# View range when player count is medium -- View range in nodes for medium player count
-view_range_medium_range (Medium players view range) int 5
+# Maximum number of timeouts before suspending the system.
+max_timeouts (Max timeouts) int 10
 
-# Player count threshold for medium view range -- Max number of players for medium view range
-view_range_medium_max (Medium players max count) int 5
+# Duration in seconds to suspend the system after too many timeouts.
+suspend_duration (Suspend duration) float 5.0
 
-# View range when player count is high -- View range in nodes for high player count
-view_range_high_range (High players view range) int 8
+# Maximum number of chunks to process in one batch.
+batch_size (Batch size) int 5
 
-# Player count threshold for high view range -- Max number of players for high view range
-view_range_high_max (High players max count) int 0
+# Interval in seconds between batch processing.
+batch_interval (Batch interval) float 0.1
 
-# Velocity threshold to enter emergency mode in nodes/s -- Player speed threshold triggering emergency mode
-extreme_velocity_threshold (Emergency velocity threshold) int 2.0
+# Maximum idle time in seconds before unloading a chunk.
+unload_timeout (Unload timeout) float 30.0
 
-# Cache size during emergency mode -- Cache size limit when in emergency mode
-emergency_cache_size (Emergency cache size) int 500
+# Reduction factor for view distance when many players are present.
+max_players_reduction (Max players reduction) float 0.8
 
-# Maximum emerges per step during emergency mode -- Max chunk emerges per globalstep in emergency mode
-emergency_emerges_per_step (Emergency emerges per step) int 1
+# Maximum number of emergence times stored for averaging.
+max_emergence_times (Max emergence times) int 50
 
-# Throttle prediction during emergency mode -- Whether to throttle prediction when in emergency mode
-throttle_prediction (Throttle prediction) bool true
+# Interval in seconds for applying thermal decay.
+thermal_decay_interval (Thermal decay interval) float 10.0
 
-# Queue size threshold for high load -- Queue length triggering high-load handling
-queue_size_threshold (Queue size threshold) int 25
+# Number of data items to compress at once.
+compression_batch_size (Compression batch size) int 10
 
-# Emerge time threshold for high load in seconds -- Per-chunk emerge time triggering high-load handling
-emerge_time_threshold (Emerge time threshold) int 5.0
+# Maximum operations to perform per tick.
+max_operations_per_tick (Max operations per tick) int 5
 
-# Cache miss ratio threshold for high load -- Cache miss ratio triggering high-load handling
-cache_miss_ratio (Cache miss ratio) int 0.7
-
-# Maximum processing time per step in seconds -- Max allowed processing time per globalstep
-max_processing_time (Max processing time) int 0.05
-
-# Consecutive overloads before emergency mode -- Number of back-to-back overloads before activating emergency mode
-consecutive_overload_threshold (Consecutive overload threshold) int 3
-
-# Emergence timeout threshold in seconds for emergency mode -- Timeouts before emergency suspension in emergency mode
-emergence_timeout_threshold (Emergence timeout threshold) int 8.0
+# Use asynchronous processing for emergences.
+async_processing (Async processing) bool true

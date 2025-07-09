@@ -1,73 +1,74 @@
-# Chunk Manager
+# Chunk Manager (2.0.0)
 
-**Chunk Manager** is a server-side Minetest mod that intelligently manages the loading, unloading, and caching of map chunks based on real-time player movement and system load. Its purpose is to improve performance and reduce lag in multiplayer environments with minimal administrative effort.
+Chunk Manager is a server-side Luanti mod that intelligently manages the loading, unloading, and caching of map chunks based on real-time player movement and system load. Its purpose is to improve performance and reduce "lag" in multiplayer chunk-loading environments.
 
 ---
 
 ## Features
 
-- **Predictive chunk loading**  
+- **Predictive Chunk Loading**  
   Anticipates player movement and preloads nearby areas to reduce loading delays.
 
-- **Dynamic cache management**  
+- **Dynamic Cache Management**  
   Automatically cleans up unused chunks, limits cache size, tracks access frequency.
 
-- **Active chunk unloading**  
+- **Active Chunk Unloading**  
   Frees memory and reduces server load by unloading distant, inactive areas.
 
-- **Load-aware behavior**  
+- **Load-Aware Behavior**  
   Monitors system performance and enters emergency mode when thresholds are exceeded (queue size, cache misses, slow emerges).
 
-- **Automatic suspension**  
+- **Automatic Suspension**  
   Temporarily pauses non-critical chunk loading during overload conditions or timeouts.
 
-- **Administrative control**  
+- **Administrative Control**  
   Provides in-game commands to monitor status, force cache cleanup, toggle emergency mode.
 
 ---
 
 ## Commands
 
-| Command | Description |
-|--------|-------------|
-| `/chunk_stats` | Shows real-time system metrics (cache size, queue, players, load state). |
-| `/chunk_emergency on/off` | Manually enable or disable emergency mode. |
-| `/chunk_emerge_pause` | Toggle emerge queue processing. |
-| `/chunk_cleanup` | Force cache cleanup. |
-| `/chunk_unload` | Force immediate unload of inactive chunks. |
-| `/chunk_reset_suspension` | Reset automatic suspension after timeouts. |
+| Command                    | Description                                                        |
+| -------------------------- | ------------------------------------------------------------------ |
+| `/chunk_manager_status`    | Show preloader status.                                             |
+| `/chunk_manager_emergency` | Toggle emergency mode.                                             |
+| `/chunk_manager_cleanup`   | Force cache cleanup.                                               |
+| `/chunk_manager_suspend`   | Suspend chunk manager temporarily.                                 |
 
 ---
 
 ## Configuration
 
-All core settings are centralized in the `CONFIG` table inside `api.lua`. These control:
+All core settings live in the `CONFIG` table inside `api.lua`. You can tweak:
+You can also configure it by going to minetest settings.
 
-- Cache size and timeout
-- Unload intervals
-- Player view range by load
-- Thresholds for overload detection
-- Emergency behavior
+- Cache size limits and timeouts  
+- Unload intervals and emerge parameters  
+- Player view range thresholds  
+- Overload detection criteria  
+- Emergency‑mode behavior
 
-You can modify these values to match your server's scale and performance profile.
+Adjust these values to fit your server’s scale and performance profile.
 
 ---
 
 ## Requirements
 
-- Minetest 5.6+
+- **Luanti 5.0+**
 
 ---
 
 ## License
 
-Attribution-NoDerivatives 4.0 International
+Attribution‑NoDerivatives 4.0 International
 
 ---
 
 ## Credits
 
-Developed by [Atlante](https://github.com/smnoe01)
+eveloped by [Atlante](https://github.com/smnoe01)
+
+---
 
 ## Discord
 
