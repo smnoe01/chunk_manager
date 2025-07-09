@@ -80,10 +80,6 @@ preloader.compression_queue = {}
 preloader.operations_this_tick = 0
 preloader.tick_start_time = 0
 
-local function send_debug(message)
-    --core.chat_send_all("[PRELOADER] " .. message) -- Désactiver cette ligne pour éviter les messages de débogage
-end
-
 local function string_split(str, delimiter)
     local result = {}
     local pattern = "([^" .. delimiter .. "]+)"
@@ -115,7 +111,7 @@ local function process_compression_queue()
     while #preloader.compression_queue > 0 and processed < preloader.config.compression_batch_size do
         local item = table.remove(preloader.compression_queue, 1)
         if item.data then
-            send_debug("Compressing chunk data of size " .. #item.data)
+            --core.log("info", "Compressing chunk data of size " .. #item.data)
             local compressed = core.compress(item.data, "deflate")
             if item.callback then
                 item.callback(compressed)
@@ -127,7 +123,7 @@ end
 
 local function decompress_chunk_data(data)
     if type(data) == "string" and data:sub(1, 1) == "\x78" then
-        send_debug("Decompressing chunk data")
+        --core.log("info", "Decompressing chunk data")
         return core.decompress(data, "deflate")
     end
     return data
@@ -138,7 +134,7 @@ local function update_thermal_data(chunk_key)
         preloader.thermal_data[chunk_key] = 0
     end
     preloader.thermal_data[chunk_key] = preloader.thermal_data[chunk_key] + 1
-    send_debug("Updated thermal data for chunk " .. chunk_key .. " to " .. preloader.thermal_data[chunk_key])
+    --core.log("info", "Updated thermal data for chunk " .. chunk_key .. " to " .. preloader.thermal_data[chunk_key])
 end
 
 local function decay_thermal_data()
@@ -165,7 +161,7 @@ local function decay_thermal_data()
 
     for _, chunk_key in ipairs(keys_to_remove) do
         preloader.thermal_data[chunk_key] = nil
-        send_debug("Decayed thermal data for chunk " .. chunk_key)
+        --core.log("info", "Decayed thermal data for chunk " .. chunk_key)
     end
 end
 
@@ -187,7 +183,7 @@ local function add_to_cache(chunk_key, data, priority)
     }
 
     update_thermal_data(chunk_key)
-    send_debug("Added chunk " .. chunk_key .. " to cache with priority " .. priority)
+    --core.log("info", "Added chunk " .. chunk_key .. " to cache with priority " .. priority)
 end
 
 -- Récupère un chunk depuis la cache
@@ -196,13 +192,17 @@ local function get_from_cache(chunk_key)
     if cached then
         cached.access_count = cached.access_count + 1
         cached.timestamp = os.time()
+
         update_thermal_data(chunk_key)
+
         preloader.stats.cache_hits = preloader.stats.cache_hits + 1
-        send_debug("Cache hit for chunk " .. chunk_key)
+        core.log("info", "Cache hit for chunk " .. chunk_key)
+
         return decompress_chunk_data(cached.data)
     else
         preloader.stats.cache_misses = preloader.stats.cache_misses + 1
-        send_debug("Cache miss for chunk " .. chunk_key)
+        core.log("warning", "Cache miss for chunk " .. chunk_key)
+
         return nil
     end
 end
@@ -229,7 +229,7 @@ local function synchronize_cache()
         if preloader.cache[key] then
             table.insert(valid_keys, key)
         else
-            send_debug("Warning: Found orphaned key in cache_keys: " .. key)
+            core.log("warning", "Warning: Found orphaned key in cache_keys: " .. key)
         end
     end
 
@@ -244,7 +244,7 @@ local function synchronize_cache()
             end
         end
         if not found then
-            send_debug("Warning: Found orphaned entry in cache: " .. chunk_key)
+            core.log("warning", "Warning: Found orphaned entry in cache: " .. chunk_key)
             table.insert(preloader.cache_keys, chunk_key)
         end
     end
@@ -261,7 +261,7 @@ local function cleanup_cache()
         return
     end
 
-    send_debug("Cache cleanup triggered, current size: " .. cache_size .. ", max: " .. max_size)
+    --core.log("info", "Cache cleanup triggered, current size: " .. cache_size .. ", max: " .. max_size)
 
     local priority_order = {CRITICAL = 4, HIGH = 3, MEDIUM = 2, LOW = 1, BACKGROUND = 0}
 
@@ -306,7 +306,7 @@ local function cleanup_cache()
         local chunk_key = chunks_to_sort[i]
         if chunk_key and preloader.cache[chunk_key] then
             remove_from_cache(chunk_key)
-            send_debug("Removed chunk " .. chunk_key .. " from cache")
+            --core.log("info", "Removed chunk " .. chunk_key .. " from cache")
             preloader.stats.chunks_unloaded = preloader.stats.chunks_unloaded + 1
         end
     end
@@ -327,7 +327,7 @@ local function check_system_load()
         avg_emergence_time = sum / #preloader.stats.emergence_times
     end
 
-    send_debug("System load check - Queue: " .. queue_size .. ", Cache miss ratio: " .. cache_miss_ratio .. ", Avg emergence time: " .. avg_emergence_time)
+    --core.log("info", "System load check - Queue: " .. queue_size .. ", Cache miss ratio: " .. cache_miss_ratio .. ", Avg emergence time: " .. avg_emergence_time)
 
     local should_emergency = queue_size > preloader.config.queue_size_threshold or
                             cache_miss_ratio > preloader.config.cache_miss_threshold or
@@ -336,22 +336,22 @@ local function check_system_load()
     if should_emergency and not preloader.emergency_mode then
         preloader.emergency_mode = true
         preloader.stats.emergency_activations = preloader.stats.emergency_activations + 1
-        send_debug("EMERGENCY MODE ACTIVATED - System overloaded!")
+        core.log("info", "EMERGENCY MODE ACTIVATED - System overloaded!")
     elseif not should_emergency and preloader.emergency_mode then
         preloader.emergency_mode = false
-        send_debug("Emergency mode deactivated - System stabilized")
+        core.log("info", "Emergency mode deactivated - System stabilized")
     end
 
     if preloader.stats.timeout_count > preloader.config.max_timeouts then
         preloader.suspended = true
         preloader.suspend_time = os.time() + preloader.config.suspend_duration
-        send_debug("SYSTEM SUSPENDED - Too many timeouts: " .. preloader.stats.timeout_count)
+        core.log("warning", "SYSTEM SUSPENDED - Too many timeouts: " .. preloader.stats.timeout_count)
     end
 
     if preloader.suspended and os.time() > preloader.suspend_time then
         preloader.suspended = false
         preloader.stats.timeout_count = 0
-        send_debug("System resumed from suspension")
+        core.log("info", "System resumed from suspension")
     end
 end
 
@@ -388,7 +388,7 @@ local function predict_player_movement(player)
 
     if player_count > 5 then
         view_distance = math.floor(view_distance * preloader.config.max_players_reduction)
-        send_debug("Reduced view distance to " .. view_distance .. " due to " .. player_count .. " players")
+        core.log("info", "Reduced view distance to " .. view_distance .. " due to " .. player_count .. " players")
     end
 
     local current_chunk = get_chunk_key(pos)
@@ -419,7 +419,7 @@ local function predict_player_movement(player)
         end
     end
 
-    send_debug("Generated " .. #predictions .. " predictions for player " .. name .. " (speed: " .. player_data.speed .. ")")
+    --core.log("info", "Generated " .. #predictions .. " predictions for player " .. name .. " (speed: " .. player_data.speed .. ")")
     preloader.stats.predictions_made = preloader.stats.predictions_made + #predictions
 
     return predictions
@@ -428,23 +428,23 @@ end
 -- Mettre en file d'attente une demande d'émergence pour un chunk
 local function queue_emergence(pos, priority)
     if preloader.suspended then
-        send_debug("Emergence suspended, ignoring request for " .. core.pos_to_string(pos))
+        core.log("info", "Emergence suspended, ignoring request for " .. core.pos_to_string(pos))
         return
     end
 
     local chunk_key = get_chunk_key(pos)
 
     if get_from_cache(chunk_key) then
-        send_debug("Chunk already cached: " .. chunk_key)
+        core.log("warning", "Chunk already cached: " .. chunk_key)
         return
     end
 
     if priority == "CRITICAL" or priority == "HIGH" then
         table.insert(preloader.prediction_queue, {pos = pos, priority = priority, chunk = chunk_key, timestamp = os.time()})
-        send_debug("Added to prediction queue: " .. chunk_key .. " (priority: " .. priority .. ")")
+        --core.log("info", "Added to prediction queue: " .. chunk_key .. " (priority: " .. priority .. ")")
     else
         table.insert(preloader.batch_queue, {pos = pos, priority = priority, chunk = chunk_key, timestamp = os.time()})
-        send_debug("Added to batch queue: " .. chunk_key .. " (priority: " .. priority .. ")")
+        --core.log("info", "Added to batch queue: " .. chunk_key .. " (priority: " .. priority .. ")")
     end
 
     preloader.stats.queue_size = #preloader.prediction_queue + #preloader.batch_queue
@@ -457,7 +457,7 @@ local function process_emergence_queue()
     local item = table.remove(preloader.prediction_queue, 1)
     local start_time = os.time()
 
-    send_debug("Processing emergence for chunk " .. item.chunk .. " at " .. core.pos_to_string(item.pos))
+    --core.log("info", "Processing emergence for chunk " .. item.chunk .. " at " .. core.pos_to_string(item.pos))
 
     core.emerge_area(item.pos, item.pos, function(blockpos, action, calls_remaining, param)
         local end_time = os.time()
@@ -470,11 +470,11 @@ local function process_emergence_queue()
 
         if action == core.emerge_cancelled or action == core.emerge_errored then
             preloader.stats.timeout_count = preloader.stats.timeout_count + 1
-            send_debug("Emergence failed for chunk " .. item.chunk .. " - action: " .. action)
+            core.log("warning", "Emergence failed for chunk " .. item.chunk .. " - action: " .. action)
         else
             add_to_cache(item.chunk, "chunk_data", item.priority)
             preloader.stats.chunks_loaded = preloader.stats.chunks_loaded + 1
-            send_debug("Emergence completed for chunk " .. item.chunk .. " in " .. emergence_time .. "s")
+            --core.log("info", "Emergence completed for chunk " .. item.chunk .. " in " .. emergence_time .. "s")
         end
     end, item)
 
@@ -490,7 +490,7 @@ local function process_batch_queue()
         table.insert(batch, table.remove(preloader.batch_queue, 1))
     end
 
-    send_debug("Processing batch of " .. #batch .. " chunks")
+    --core.log("info", "Processing batch of " .. #batch .. " chunks")
 
     for _, item in ipairs(batch) do
         local start_time = os.time()
@@ -502,9 +502,9 @@ local function process_batch_queue()
             if action ~= core.emerge_cancelled and action ~= core.emerge_errored then
                 add_to_cache(item.chunk, "chunk_data", item.priority)
                 preloader.stats.chunks_loaded = preloader.stats.chunks_loaded + 1
-                send_debug("Batch emergence completed for chunk " .. item.chunk)
+                --core.log("warning", "Batch emergence completed for chunk " .. item.chunk)
             else
-                send_debug("Batch emergence failed for chunk " .. item.chunk)
+                core.log("warning", "Batch emergence failed for chunk " .. item.chunk)
             end
         end, item)
     end
@@ -559,7 +559,7 @@ local function unload_old_chunks()
         remove_from_cache(chunk_key)
         preloader.thermal_data[chunk_key] = nil
         preloader.stats.chunks_unloaded = preloader.stats.chunks_unloaded + 1
-        send_debug("Unloaded old chunk " .. chunk_key)
+        core.log("info", "Unloaded old chunk " .. chunk_key)
     end
 end
 
@@ -641,7 +641,8 @@ local function reset_stats()
         predictions_made = 0,
         emergency_activations = 0
     }
-    send_debug("Statistics reset")
+
+    core.log("info", "Statistics reset")
 end
 
 core.register_chatcommand("chunk_manager_status", {
@@ -674,8 +675,10 @@ core.register_chatcommand("chunk_manager_emergency", {
     privs = {server = true},
     func = function(name, param)
         preloader.emergency_mode = not preloader.emergency_mode
-        send_debug("Emergency mode " .. (preloader.emergency_mode and "ACTIVATED" or "DEACTIVATED") .. " by " .. name)
-        return true, "Emergency mode " .. (preloader.emergency_mode and "enabled" or "disabled")
+
+        core.log("warning", "Emergency mode " .. (preloader.emergency_mode and "ACTIVATED" or "DEACTIVATED") .. " by " .. name)
+
+        return true, S("Emergency mode ") .. (preloader.emergency_mode and S("enabled") or S("disabled"))
     end
 })
 
@@ -689,9 +692,12 @@ core.register_chatcommand("chunk_manager_cleanup", {
         preloader.thermal_data = {}
         preloader.prediction_queue = {}
         preloader.batch_queue = {}
+
         reset_stats()
-        send_debug("Forced cleanup executed by " .. name)
-        return true, "Cache and queues cleared"
+
+        core.log("info", "Forced cleanup executed by " .. name)
+
+        return true, S("Cache and queues cleared")
     end
 })
 
@@ -702,8 +708,10 @@ core.register_chatcommand("chunk_manager_suspend", {
     func = function(name, param)
         preloader.suspended = true
         preloader.suspend_time = os.time() + preloader.config.suspend_duration
-        send_debug("System suspended by " .. name .. " for " .. preloader.config.suspend_duration .. "s")
-        return true, "Preloader suspended for " .. preloader.config.suspend_duration .. " seconds"
+
+        core.log("warning", "System suspended by " .. name .. " for " .. preloader.config.suspend_duration .. "s")
+
+        return true, S("Chunk Manager suspended for ") .. preloader.config.suspend_duration .. "s"
     end
 })
 
