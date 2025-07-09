@@ -66,7 +66,7 @@ Attribution‑NoDerivatives 4.0 International
 
 ## Credits
 
-eveloped by [Atlante](https://github.com/smnoe01)
+Developed by [Atlante](https://github.com/smnoe01)
 
 ---
 
