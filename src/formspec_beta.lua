@@ -1,7 +1,5 @@
 --[[
-    Chunk Manager - Preloader Configuration
-    This file is part of the Chunk Manager mod for Luanti.
-    It provides a formspec interface for configuring preloader settings.
+
                             [Disable]
 --]]
 
