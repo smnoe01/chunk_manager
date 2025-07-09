@@ -24,9 +24,6 @@ Chunk Manager is a server-side Luanti mod that intelligently manages the loading
 - **Automatic Suspension**  
   Temporarily pauses non-critical chunk loading during overload conditions or timeouts.
 
-- **Administrative Control**  
-  Provides in-game commands to monitor status, force cache cleanup, toggle emergency mode.
-
 ---
 
 ## Commands
@@ -49,8 +46,6 @@ You can also configure mod settings it by going to minetest settings.
 - Player view range thresholds  
 - Overload detection critical 
 - Emergency‑mode behavior
-
-Adjust these values to fit your server’s scale and performance profile.
 
 ---
 
