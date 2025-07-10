@@ -57,7 +57,7 @@ You can also configure mod settings it by going to minetest settings.
 
 ## License
 
-Attribution‑NoDerivatives 4.0 International
+Lgpl-2.1
 
 ---
 
