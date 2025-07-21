@@ -6,17 +6,3 @@ Chunk Manager is a server-side Luanti mod that intelligently manages the loading
 
 
 ---
-
-## Features
-
-- **Predictive Chunk Loading**  
-  Anticipates player movement and preloads nearby areas to reduce loading delays.
-
-- **Dynamic Cache Management**  
-  Automatically cleans up unused chunks, limits cache size, tracks access frequency.
-
-- **Active Chunk Unloading**  
-  Frees memory and reduces server load by unloading distant, inactive areas.
-
-- **Automatic Suspension**  
-  Temporarily pauses non-critical chunk loading during overload conditions or timeouts.
