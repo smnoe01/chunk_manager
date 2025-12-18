@@ -1,5 +1,5 @@
 local modname = core.get_current_modname()
-local version = "2.0.2.3"
+local version = "3.0.5.2"
 
 local src_path = core.get_modpath(modname) .. "/src"
 
